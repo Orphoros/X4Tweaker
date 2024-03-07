@@ -2,20 +2,28 @@
 X4 XML Tweaker
 """
 import toga
+from toga.constants import BLACK
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 
 class X4Tweaker(toga.App):
     def startup(self):
-        main_box = toga.Box(style=Pack(direction=COLUMN, padding=10))
+        main_box = toga.Box(style=Pack(direction=COLUMN, padding=10, background_color=BLACK))
 
         option_container_metadata = toga.Box(style=Pack(direction=COLUMN, padding=5)) # mod name, version, etc.
         option_container_weapons = toga.Box(style=Pack(direction=COLUMN))
+        option_container_turrets = toga.Box(style=Pack(direction=COLUMN))
+        option_container_shields = toga.Box(style=Pack(direction=COLUMN))
+        option_container_engines = toga.Box(style=Pack(direction=COLUMN))
 
         container = toga.OptionContainer(
             content=[
                 ("Mod Details", option_container_metadata),
-                ("Weapons",option_container_weapons)
+                ("Weapons", option_container_weapons),
+                ("Turrets", option_container_turrets),
+                ("Shields", option_container_shields),
+                ("Engines", option_container_engines)
+
             ],
             style=Pack(height=500)
         )
@@ -86,6 +94,27 @@ class X4Tweaker(toga.App):
         option_container_metadata.add(dlc_options)
 
         option_container_metadata.add(toga.Divider(style=Pack(padding=10)))
+
+
+        # Weapons Tab Data
+
+        option_container_weapons.add(toga.Label("Which weapons do you wish to edit?", style=Pack(padding=(4, 5))))
+
+        weapon_options = toga.ScrollContainer(content=toga.Box(children=[
+            toga.Switch("All Weapons"),
+            toga.Switch("Pulse Laser MK1"),
+            toga.Switch("Pulse Laser MK2"),
+            toga.Switch("Bolt Repeater MK1"),
+            toga.Switch("Bolt Repeater MK2"),
+            toga.Switch("Beam Emitter MK1"),
+            toga.Switch("Beam Emitter MK2"),
+            toga.Switch("Plasma Cannon MK1"),
+            toga.Switch("Plasma Cannon MK2"),
+            toga.Switch("Shard Battery MK1"),
+            toga.Switch("Shard Battery MK2")
+        ], style=Pack(direction=COLUMN, padding=5, height=200)))
+
+        option_container_weapons.add(weapon_options)
 
         button = toga.Button(
             "Generate",
