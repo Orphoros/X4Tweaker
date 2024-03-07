@@ -1,0 +1,2 @@
+briefcase==0.3.17
+watchdog==4.0.0
