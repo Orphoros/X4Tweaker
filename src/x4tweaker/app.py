@@ -38,8 +38,38 @@ class X4Tweaker(toga.App):
         option_container_metadata_version.add(version_label)
         option_container_metadata_version.add(self.mod_version_input)
 
+        option_container_metadata_description = toga.Box(style=Pack(direction=ROW, padding=5))
+        description_label = toga.Label(
+            "Mod description: ",
+            style=Pack(padding=(0, 5), width=100)
+        )
+        self.mod_description_input = toga.MultilineTextInput(style=Pack(flex=1))
+        option_container_metadata_description.add(description_label)
+        option_container_metadata_description.add(self.mod_description_input)
+
+        option_container_metadata_author = toga.Box(style=Pack(direction=ROW, padding=5))
+        author_label = toga.Label(
+            "Mod author: ",
+            style=Pack(padding=(0, 5), width = 100)
+        )
+        self.mod_author_input = toga.TextInput(style=Pack(flex=1))
+        option_container_metadata_author.add(author_label)
+        option_container_metadata_author.add(self.mod_author_input)
+
+        option_container_metadata_save = toga.Box(style=Pack(direction=ROW, padding=5))
+        save_label = toga.Label(
+            "Save compatible? ",
+            style=Pack(padding=(0, 5), width=100)
+        )
+        self.mod_save_switch = toga.Switch("No/Yes")
+        option_container_metadata_save.add(save_label)
+        option_container_metadata_save.add(self.mod_save_switch)
+
         option_container_metadata.add(option_container_metadata_name)
+        option_container_metadata.add(option_container_metadata_description)
+        option_container_metadata.add(option_container_metadata_author)
         option_container_metadata.add(option_container_metadata_version)
+        option_container_metadata.add(option_container_metadata_save)
 
         option_container_metadata.add(toga.Divider(style=Pack(padding=10)))
 
