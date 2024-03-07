@@ -1,12 +1,108 @@
-# X4 Tweaker
+<div align="center" style="display:grid;place-items:center;">
+<p>
+    <img width="100" src="./src/x4tweaker/resources/x4tweaker.png" alt="Statusify Logo">
+</p>
+<h1>X4 Tweaker</h1>
+
+![GitHub](https://img.shields.io/github/license/Orphoros/X4Tweaker)
+![GitHub contributors](https://img.shields.io/github/contributors/Orphoros/X4Tweaker)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Orphoros/X4Tweaker)
+![GitHub last commit](https://img.shields.io/github/last-commit/Orphoros/X4Tweaker)
+
+<h4>Cross platform desktop mod template generator for X4: Foundations</h4>
+</div>
+
+## About
+
+X4 Tweaker enables you to easily create your own mod configs for X4: Foundations with a simple desktop application.
+
+> [!NOTE]
+> This project is a work in progress and no releases are available yet. If you wish to use the tool, you can build it from the source code by cloning the repository and following the developer's guide.
+
+## Supported Platforms
+
+X4 Tweaker is available for the following platforms:
+
+<p align="left">
+    <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" />
+    <img src="https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white" />
+    <img src="https://img.shields.io/badge/Linux-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" />
+</p>
+
+## Technologies
+
+<p align="left">
+    <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+    <img src="https://img.shields.io/badge/BeeWare-666666?style=for-the-badge&logo=python&logoColor=white" />
+</p>
 
 ## Developer's guide
 
-Install dependencies:
+### 0. Prerequisites
+
+- Install Python 3.8+
+
+### 1. Setup
+
+#### Make a Python virtual environment:
+
+<details><summary>macOS</summary>
+
+```bash
+python3 -m venv beeware-venv
+```
+
+</details>
+
+<details><summary>Windows</summary>
+
+```bash
+py -m venv beeware-venv
+```
+
+</details>
+
+<details><summary>Linux</summary>
+
+```bash
+python3 -m venv beeware-venv
+```
+
+</details>
+
+#### Activate the virtual environment:
+
+<details><summary>macOS</summary>
+
+```bash
+source beeware-venv/bin/activate
+```
+
+</details>
+
+<details><summary>Windows</summary>
+
+```bash
+beeware-venv\Scripts\activate
+```
+
+</details>
+
+<details><summary>Linux</summary>
+
+```bash
+source beeware-venv/bin/activate
+```
+
+</details>
+
+#### Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
+
+### 2. Run
 
 Run in watch mode:
 
@@ -20,10 +116,36 @@ Run in dev mode:
 briefcase dev
 ```
 
-Update dependencies:
+Run in production mode:
+
+```bash
+briefcase run -u
+```
+
+### 3. Update dependencies:
 
 ```bash
 pip freeze > requirements.txt
+```
+
+### 4. Build the app:
+
+Create the application scaffold
+
+```bash
+briefcase create
+```
+
+Build the application
+
+```bash
+briefcase build
+```
+
+Update the built application
+
+```bash
+briefcase update
 ```
 
 ---
