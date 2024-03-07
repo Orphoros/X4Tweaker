@@ -61,7 +61,7 @@ class X4Tweaker(toga.App):
             "Save compatible? ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_save_switch = toga.Switch("No/Yes")
+        self.mod_save_switch = toga.Switch("Yes")
         option_container_metadata_save.add(save_label)
         option_container_metadata_save.add(self.mod_save_switch)
 
