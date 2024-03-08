@@ -2,13 +2,12 @@
 X4 XML Tweaker
 """
 import toga
-from toga.constants import BLACK
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 
 class X4Tweaker(toga.App):
     def startup(self):
-        main_box = toga.Box(style=Pack(direction=COLUMN, padding=10, background_color=BLACK))
+        main_box = toga.Box(style=Pack(direction=COLUMN, padding=10))
 
         option_container_metadata = toga.Box(style=Pack(direction=COLUMN, padding=5)) # mod name, version, etc.
         option_container_weapons = toga.Box(style=Pack(direction=COLUMN))
