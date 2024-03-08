@@ -5,6 +5,9 @@ import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 
+from x4tweaker.lib.bundler import ModBundle
+from x4tweaker.lib.class_xml_mod_metadata import XmlMetadataBuilder
+
 class X4Tweaker(toga.App):
     def startup(self):
         main_box = toga.Box(style=Pack(direction=COLUMN, padding=10))
@@ -117,20 +120,37 @@ class X4Tweaker(toga.App):
 
         button = toga.Button(
             "Generate",
-            on_press=self.say_hello,
+            on_press=self.generate_mod,
             style=Pack(padding=5)
         )
 
         main_box.add(container)
-        # main_box.add(button)
+        main_box.add(button)
 
         self.main_window = toga.MainWindow(title=self.formal_name, size=(800, 600), resizable=False)
         self.main_window.content = main_box
         self.main_window.show()
 
-    def say_hello(self, widget):
-        print('Generate button clicked')
-
+    async def generate_mod(self, widget):
+        metadata = XmlMetadataBuilder()\
+            .add_name(self.mod_name_input.value)\
+            .add_version(self.mod_version_input.value)\
+            .add_description(self.mod_description_input.value)\
+            .add_author(self.mod_author_input.value)\
+            .add_savable(True)\
+            .add_mod_compatibility("X4: Split Vendetta")\
+            .add_mod_compatibility("X4: Cradle of Humanity")\
+            .add_mod_compatibility("X4: Kingdom End")\
+            .add_mod_compatibility("X4: Timelines")\
+            .add_mod_compatibility("X4: Tides of Avarice").build_xml_mod()
+        
+        try:
+            path_name = await self.main_window.save_file_dialog(file_types=["x4mod.zip"], title="Select mod", suggested_filename=self.mod_name_input.value)
+            if path_name is not None:
+                ModBundle(bundle_name=self.mod_name_input.value, bundle_output_path=path_name).add_xml(metadata).build()
+                await self.main_window.info_dialog("X4 Tweaker", "Mod created successfully!")
+        except ValueError:
+            await self.main_window.error_dialog("X4 Tweaker", "Could not select folder. Please try again.")
 
 def main():
     return X4Tweaker()
