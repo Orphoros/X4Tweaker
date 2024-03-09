@@ -35,7 +35,9 @@ class ModBundle():
         """
         Builds the mod bundle to the disk.
         """
-        # make a root directory for the zip
-        with zipfile.ZipFile(str(self.output_path) + ".x4mod.zip", "w") as z:
+        # remove file extension from output path
+        path = os.path.splitext(self.output_path)[0]
+        print(path)
+        with zipfile.ZipFile(str(path) + ".x4mod.zip", "w") as z:
             for mod in self.mods:
                 z.writestr(os.path.join(self.name, mod.get_path), mod.get_xml)

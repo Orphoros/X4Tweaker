@@ -5,7 +5,7 @@ import os.path
 from x4tweaker.lib.interfaces import IXmlBuilder, IXmlMod
 
 class XmlMetadata(IXmlMod):
-    def __init__(self, bundle_name: str, bundle_contents: str, bundle_output_path = ".") -> None:
+    def __init__(self, bundle_name: str, bundle_contents: str, bundle_output_path = "") -> None:
         self.name = bundle_name
         self.output_path = bundle_output_path
         self.xml = bundle_contents

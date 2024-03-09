@@ -145,7 +145,7 @@ class X4Tweaker(toga.App):
             .add_mod_compatibility("X4: Tides of Avarice").build_xml_mod()
         
         try:
-            path_name = await self.main_window.save_file_dialog(file_types=["x4mod.zip"], title="Select mod", suggested_filename=self.mod_name_input.value)
+            path_name = await self.main_window.save_file_dialog(file_types=["zip"], title="Save mod", suggested_filename=self.mod_name_input.value)
             if path_name is not None:
                 ModBundle(bundle_name=self.mod_name_input.value, bundle_output_path=path_name).add_xml(metadata).build()
                 await self.main_window.info_dialog("X4 Tweaker", "Mod created successfully!")
