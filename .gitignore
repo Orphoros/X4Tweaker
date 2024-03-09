@@ -35,6 +35,7 @@ Temporary Items
 env/
 beeware-venv/
 build/
+tmp/
 develop-eggs/
 dist/
 downloads/
