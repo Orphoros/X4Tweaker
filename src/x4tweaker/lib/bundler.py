@@ -37,7 +37,7 @@ class ModBundle():
         """
         # remove file extension from output path
         path = os.path.splitext(self.output_path)[0]
-        print(path)
+        # FIXME: Can't override existing files
         with zipfile.ZipFile(str(path) + ".zip", "w") as z:
             for mod in self.mods:
                 z.writestr(os.path.join(self.name, mod.get_path), mod.get_xml)

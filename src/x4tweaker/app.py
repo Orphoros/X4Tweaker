@@ -6,11 +6,14 @@ from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 
 from x4tweaker.lib.bundler import ModBundle
+from x4tweaker.lib.constants import Dlc
 from x4tweaker.lib.class_xml_mod_metadata import XmlMetadataBuilder
 
 class X4Tweaker(toga.App):
     def startup(self):
         main_box = toga.Box(style=Pack(direction=COLUMN, padding=10))
+
+        self.xml_content_builder = XmlMetadataBuilder()
 
         option_container_metadata = toga.Box(style=Pack(direction=COLUMN, padding=5)) # mod name, version, etc.
         option_container_weapons = toga.Box(style=Pack(direction=COLUMN))
@@ -86,12 +89,7 @@ class X4Tweaker(toga.App):
         option_container_metadata.add(toga.Label("Compatible DLCs:", style=Pack(padding=(4, 5))))
 
         dlc_options = toga.ScrollContainer(content=toga.Box(children=[
-            toga.Switch("X4: Split Vendetta"),
-            toga.Switch("X4: Cradle of Humanity"),
-            toga.Switch("X4: Tides of Avarice"),
-            toga.Switch("X4: Kingdom End"),
-            toga.Switch("X4: Timelines")
-
+            toga.Switch(id=dlc.value[0], text=dlc.value[1], on_change=self.add_dlc_requirement) for dlc in Dlc
         ], style=Pack(direction=COLUMN, padding=5)))
 
         option_container_metadata.add(dlc_options)
@@ -131,19 +129,18 @@ class X4Tweaker(toga.App):
         self.main_window = toga.MainWindow(title=self.formal_name, size=(800, 600), resizable=False)
         self.main_window.content = main_box
         self.main_window.show()
+    
+    def add_dlc_requirement(self, widget: toga.Switch):
+        self.xml_content_builder.add_dlc_requirement(widget.id, widget.value)
 
     async def generate_mod(self, widget):
-        metadata = XmlMetadataBuilder()\
+        metadata = self.xml_content_builder\
             .add_name(self.mod_name_input.value)\
             .add_version(self.mod_version_input.value)\
             .add_description(self.mod_description_input.value)\
             .add_author(self.mod_author_input.value)\
             .add_save_compatibility(self.mod_save_switch.value)\
-            .add_dlc_requirement("X4: Split Vendetta")\
-            .add_dlc_requirement("X4: Cradle of Humanity")\
-            .add_dlc_requirement("X4: Tides of Avarice")\
-            .add_dlc_requirement("X4: Kingdom End")\
-            .add_dlc_requirement("X4: Timelines").build_xml_mod()
+            .build_xml_mod()
         
         try:
             path_name = await self.main_window.save_file_dialog(file_types=["zip"], title="Save mod", suggested_filename=self.mod_name_input.value)

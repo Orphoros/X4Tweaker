@@ -2,6 +2,7 @@ import xml.dom.minidom
 from xml.etree.ElementTree import Element, SubElement, tostring
 import os.path
 
+from x4tweaker.lib.constants import Dlc
 from x4tweaker.lib.interfaces import IXmlBuilder, IXmlMod
 
 class XmlMetadata(IXmlMod):
@@ -20,42 +21,49 @@ class XmlMetadata(IXmlMod):
 
 class XmlMetadataBuilder(IXmlBuilder):
     def __init__(self) -> None:
-        self.root = Element('root')
-        self.mod = SubElement(self.root, "child")
-        self.mods = []
+        self.content = Element('content')
+
+        for dlc in Dlc:
+            id = dlc.value[0]
+            name = dlc.value[1]
+            element = SubElement(self.content, "dependency")
+            element.set("id", id)
+            element.set("name", name)
+            element.set("optional", "true")
+
+        # TODO: Add ID
+        # TODO: Add date
 
     def add_name(self, name: str):
-        SubElement(self.mod, "name").text = name
+        self.content.set("name", name)
         return self
 
     def add_version(self, version: str):
-        SubElement(self.mod, "version").text = version
+        self.content.set("version", version)
         return self
 
     def add_description(self, description: str):
-        SubElement(self.mod, "description").text = description
+        self.content.set("description", description)
         return self
     
     def add_author(self, author: str):
-        SubElement(self.mod, "author").text = author
+        self.content.set("author", author)
         return self
 
     def add_version(self, version: str):
-        SubElement(self.mod, "version").text = version
+        self.content.set("version", version)
         return self
 
-    def add_save_compatibility(self, savable: bool):
-        SubElement(self.mod, "save").text = str(savable)
+    def add_save_compatibility(self, save_compatible: bool):
+        self.content.set("save", "1" if save_compatible else "0")
         return self
 
-    def add_dlc_requirement(self, mod: str):
-        if mod not in self.mods:
-            self.mods.append(mod)
+    def add_dlc_requirement(self, dlc: str, required: bool):
+        self.content.find(".//dependency[@id='" + dlc + "']").set("optional", "false" if required else "true")
         return self
 
     def build_xml_mod(self) -> IXmlMod:
-        SubElement(self.mod, "required_dlc").text = ', '.join(self.mods)
-        str = tostring(self.root, encoding='unicode')
+        str = tostring(self.content, encoding='unicode')
         dom = xml.dom.minidom.parseString(str)
         str_formatted = dom.toprettyxml()
         return XmlMetadata(bundle_name="content.xml", bundle_contents=str_formatted)
