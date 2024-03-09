@@ -138,7 +138,7 @@ class X4Tweaker(toga.App):
             .add_version(self.mod_version_input.value)\
             .add_description(self.mod_description_input.value)\
             .add_author(self.mod_author_input.value)\
-            .add_save_compatibility(True)\
+            .add_save_compatibility(self.mod_save_switch.value)\
             .add_dlc_requirement("X4: Split Vendetta")\
             .add_dlc_requirement("X4: Cradle of Humanity")\
             .add_dlc_requirement("X4: Tides of Avarice")\
