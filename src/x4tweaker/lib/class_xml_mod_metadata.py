@@ -44,18 +44,18 @@ class XmlMetadataBuilder(IXmlBuilder):
         SubElement(self.mod, "version").text = version
         return self
 
-    def add_savable(self, savable: bool):
-        SubElement(self.mod, "savable").text = str(savable)
+    def add_save_compatibility(self, savable: bool):
+        SubElement(self.mod, "save").text = str(savable)
         return self
 
-    def add_mod_compatibility(self, mod: str):
+    def add_dlc_requirement(self, mod: str):
         if mod not in self.mods:
             self.mods.append(mod)
         return self
 
     def build_xml_mod(self) -> IXmlMod:
-        SubElement(self.mod, "mod_compatibility").text = ', '.join(self.mods)
+        SubElement(self.mod, "required_dlc").text = ', '.join(self.mods)
         str = tostring(self.root, encoding='unicode')
         dom = xml.dom.minidom.parseString(str)
         str_formatted = dom.toprettyxml()
-        return XmlMetadata(bundle_name="metadata.xml", bundle_contents=str_formatted)
+        return XmlMetadata(bundle_name="content.xml", bundle_contents=str_formatted)

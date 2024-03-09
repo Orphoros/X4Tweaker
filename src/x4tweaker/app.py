@@ -88,9 +88,10 @@ class X4Tweaker(toga.App):
         dlc_options = toga.ScrollContainer(content=toga.Box(children=[
             toga.Switch("X4: Split Vendetta"),
             toga.Switch("X4: Cradle of Humanity"),
+            toga.Switch("X4: Tides of Avarice"),
             toga.Switch("X4: Kingdom End"),
-            toga.Switch("X4: Timelines"),
-            toga.Switch("X4: Tides of Avarice")
+            toga.Switch("X4: Timelines")
+
         ], style=Pack(direction=COLUMN, padding=5)))
 
         option_container_metadata.add(dlc_options)
@@ -137,12 +138,12 @@ class X4Tweaker(toga.App):
             .add_version(self.mod_version_input.value)\
             .add_description(self.mod_description_input.value)\
             .add_author(self.mod_author_input.value)\
-            .add_savable(True)\
-            .add_mod_compatibility("X4: Split Vendetta")\
-            .add_mod_compatibility("X4: Cradle of Humanity")\
-            .add_mod_compatibility("X4: Kingdom End")\
-            .add_mod_compatibility("X4: Timelines")\
-            .add_mod_compatibility("X4: Tides of Avarice").build_xml_mod()
+            .add_save_compatibility(True)\
+            .add_dlc_requirement("X4: Split Vendetta")\
+            .add_dlc_requirement("X4: Cradle of Humanity")\
+            .add_dlc_requirement("X4: Tides of Avarice")\
+            .add_dlc_requirement("X4: Kingdom End")\
+            .add_dlc_requirement("X4: Timelines").build_xml_mod()
         
         try:
             path_name = await self.main_window.save_file_dialog(file_types=["zip"], title="Save mod", suggested_filename=self.mod_name_input.value)
