@@ -1,6 +1,7 @@
 """
 X4 XML Tweaker
 """
+from tkinter import HIDDEN
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
@@ -16,7 +17,7 @@ class X4Tweaker(toga.App):
         self.xml_content_builder = XmlMetadataBuilder()
 
         option_container_metadata = toga.Box(style=Pack(direction=COLUMN, padding=5)) # mod name, version, etc.
-        option_container_weapons = toga.Box(style=Pack(direction=COLUMN))
+        self.option_container_weapons = toga.Box(style=Pack(direction=COLUMN))
         option_container_turrets = toga.Box(style=Pack(direction=COLUMN))
         option_container_shields = toga.Box(style=Pack(direction=COLUMN))
         option_container_engines = toga.Box(style=Pack(direction=COLUMN))
@@ -24,7 +25,7 @@ class X4Tweaker(toga.App):
         container = toga.OptionContainer(
             content=[
                 ("Mod Details", option_container_metadata),
-                ("Weapons", option_container_weapons),
+                ("Weapons", self.option_container_weapons),
                 ("Turrets", option_container_turrets),
                 ("Shields", option_container_shields),
                 ("Engines", option_container_engines)
@@ -109,12 +110,22 @@ class X4Tweaker(toga.App):
 
         # Weapons Tab Data
 
-        option_container_weapons.add(toga.Label("Which weapons do you wish to edit?", style=Pack(padding=(4, 5))))
+        weapon_class_selector = toga.Selection(items=["Chose...", "SMALL", "MEDIUM", "LARGE"], on_change=self.toggle_weapon_class_view)
+        self.option_container_weapons.add(weapon_class_selector)
+
+        self.weapons_s_box = toga.Box(style=Pack(direction=COLUMN), id="weapons_s_box")
+        self.weapons_m_box = toga.Box(style=Pack(direction=COLUMN), id="weapons_m_box")
+        self.weapons_l_box = toga.Box(style=Pack(direction=COLUMN), id="weapons_l_box")
+
+        self.weapons_m_box.add(toga.Label("M BOX", style=Pack(padding=(4, 5))))
+
+
+        self.weapons_s_box.add(toga.Label("Which weapons do you wish to edit?", style=Pack(padding=(4, 5))))
 
         weapon_options = toga.ScrollContainer(content=toga.Box(children=[
             toga.Switch(id=weapon_small.value[0], text=weapon_small.value[1]) for weapon_small in SWeapons
         ], style=Pack(direction=COLUMN, padding=5)))
-        option_container_weapons.add(weapon_options)
+        self.weapons_s_box.add(weapon_options)
 
         button = toga.Button(
             "Generate",
@@ -131,6 +142,25 @@ class X4Tweaker(toga.App):
     
     def add_dlc_requirement(self, widget: toga.Switch):
         self.xml_content_builder.add_dlc_requirement(widget.id, widget.value)
+
+    def toggle_weapon_class_view(self, widget: toga.Selection):
+        match widget.value:
+            case "SMALL":
+                self.option_container_weapons.add(self.weapons_s_box)
+                self.option_container_weapons.remove(self.weapons_m_box)
+                self.option_container_weapons.remove(self.weapons_l_box)
+            case "MEDIUM":
+                self.option_container_weapons.remove(self.weapons_s_box)
+                self.option_container_weapons.add(self.weapons_m_box)
+                self.option_container_weapons.remove(self.weapons_l_box)
+            case "LARGE":
+                self.option_container_weapons.remove(self.weapons_s_box)
+                self.option_container_weapons.remove(self.weapons_m_box)
+                self.option_container_weapons.add(self.weapons_l_box)
+            case _:
+                self.option_container_weapons.remove(self.weapons_s_box)
+                self.option_container_weapons.remove(self.weapons_m_box)
+                self.option_container_weapons.remove(self.weapons_l_box)
 
     async def generate_mod(self, widget):
         metadata = self.xml_content_builder\
