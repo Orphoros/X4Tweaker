@@ -49,6 +49,10 @@ class XmlMetadataBuilder(IXmlBuilder):
     def add_author(self, author: str):
         self.content.set("author", author)
         return self
+    
+    def add_date(self, date: str):
+        self.content.set("date", date)
+        return self
 
     def add_version(self, version: str):
         self.content.set("version", version)

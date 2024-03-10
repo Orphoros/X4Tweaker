@@ -6,7 +6,7 @@ from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 
 from x4tweaker.lib.bundler import ModBundle
-from x4tweaker.lib.constants import Dlc
+from x4tweaker.lib.constants import Dlc, SWeapons
 from x4tweaker.lib.class_xml_mod_metadata import XmlMetadataBuilder
 
 class X4Tweaker(toga.App):
@@ -69,6 +69,15 @@ class X4Tweaker(toga.App):
         option_container_metadata_author.add(author_label)
         option_container_metadata_author.add(self.mod_author_input)
 
+        option_container_metadata_date = toga.Box(style=Pack(direction=ROW, padding=5))
+        date_label = toga.Label(
+            "Date: ",
+            style=Pack(padding=(0, 5), width = 100)
+        )
+        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD")
+        option_container_metadata_date.add(date_label)
+        option_container_metadata_date.add(self.mod_date_input)
+
         option_container_metadata_save = toga.Box(style=Pack(direction=ROW, padding=5))
         save_label = toga.Label(
             "Save compatible? ",
@@ -82,6 +91,7 @@ class X4Tweaker(toga.App):
         option_container_metadata.add(option_container_metadata_description)
         option_container_metadata.add(option_container_metadata_author)
         option_container_metadata.add(option_container_metadata_version)
+        option_container_metadata.add(option_container_metadata_date)
         option_container_metadata.add(option_container_metadata_save)
 
         option_container_metadata.add(toga.Divider(style=Pack(padding=10)))
@@ -102,19 +112,8 @@ class X4Tweaker(toga.App):
         option_container_weapons.add(toga.Label("Which weapons do you wish to edit?", style=Pack(padding=(4, 5))))
 
         weapon_options = toga.ScrollContainer(content=toga.Box(children=[
-            toga.Switch("All Weapons"),
-            toga.Switch("Pulse Laser MK1"),
-            toga.Switch("Pulse Laser MK2"),
-            toga.Switch("Bolt Repeater MK1"),
-            toga.Switch("Bolt Repeater MK2"),
-            toga.Switch("Beam Emitter MK1"),
-            toga.Switch("Beam Emitter MK2"),
-            toga.Switch("Plasma Cannon MK1"),
-            toga.Switch("Plasma Cannon MK2"),
-            toga.Switch("Shard Battery MK1"),
-            toga.Switch("Shard Battery MK2")
-        ], style=Pack(direction=COLUMN, padding=5, height=200)))
-
+            toga.Switch(id=weapon_small.value[0], text=weapon_small.value[1]) for weapon_small in SWeapons
+        ], style=Pack(direction=COLUMN, padding=5)))
         option_container_weapons.add(weapon_options)
 
         button = toga.Button(
@@ -139,6 +138,7 @@ class X4Tweaker(toga.App):
             .add_version(self.mod_version_input.value)\
             .add_description(self.mod_description_input.value)\
             .add_author(self.mod_author_input.value)\
+            .add_date(self.mod_date_input.value)\
             .add_save_compatibility(self.mod_save_switch.value)\
             .build_xml_mod()
         
