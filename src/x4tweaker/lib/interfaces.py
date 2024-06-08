@@ -50,6 +50,13 @@ class IViewComponent(metaclass=ABCMeta):
         Initializes the view component.
         """
         self.main_window = main_window
+    
+    @abstractmethod
+    def validation_callback(self, callback):
+        """
+        Sets the validity of the component.
+        """
+        pass
 
     @property
     @abstractmethod

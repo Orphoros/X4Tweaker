@@ -10,7 +10,7 @@ class WeaponsSubView (IViewComponent):
         self.metadata_box = toga.Box(style=Pack(direction=COLUMN, padding=5))
 
     def __define_comp_weapon_selector(self) -> toga.Box:
-        self.weapon_class_selection = toga.Selection(items=["Chose...", "SMALL", "MEDIUM", "LARGE"], on_change=self.toggle_weapon_class_view)
+        self.weapon_class_selection = toga.Selection(items=["Chose...", "SMALL", "MEDIUM", "LARGE"], on_change=self.__toggle_weapon_class_view)
         return self.weapon_class_selection
     
     def __define_comp_option_container_weapons(self) -> toga.Box:
@@ -38,7 +38,7 @@ class WeaponsSubView (IViewComponent):
         self.weapons_l_box.add(toga.Label("L BOX", style=Pack(padding=(4, 5))))
         return self.weapons_l_box
 
-    def toggle_weapon_class_view(self, widget: toga.Selection):
+    def __toggle_weapon_class_view(self, widget: toga.Selection):
         match widget.value:
             case "SMALL":
                 self.option_container_weapons.add(self.weapons_s_box)
@@ -70,3 +70,6 @@ class WeaponsSubView (IViewComponent):
         self.metadata_box.add(self.__define_comp_option_container_weapons())
 
         return self.metadata_box
+
+    def validation_callback(self, callback):
+        pass

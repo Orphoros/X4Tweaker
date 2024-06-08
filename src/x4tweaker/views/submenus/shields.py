@@ -9,6 +9,9 @@ class ShieldsSubView (IViewComponent):
 
         self.shields_box = toga.Box(style=Pack(direction=COLUMN, padding=5))
 
+    def validation_callback(self, callback):
+        pass
+
     @property
     def component(self):
         return self.shields_box

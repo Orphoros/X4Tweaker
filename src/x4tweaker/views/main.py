@@ -13,6 +13,7 @@ class MainView (IViewComponent):
         self.main_box = toga.Box(style=Pack(direction=COLUMN, padding=10))
 
         self.metadata_sub_view = MetadataSubView(self.main_window, self.xml_content_builder)
+        self.metadata_sub_view.validation_callback(self.__control_button)
         self.weapons_sub_view = WeaponsSubView(self.main_window)
         self.turrets_sub_view = TurretsSubView(self.main_window)
         self.shields_sub_view = ShieldsSubView(self.main_window)
@@ -32,12 +33,16 @@ class MainView (IViewComponent):
 
         self.generate_btn = toga.Button(
             "Generate",
-            on_press=self.generate_mod,
+            enabled=False,
+            on_press=self.__generate_mod,
             style=Pack(padding=5)
         )
-        print(self.metadata_sub_view.mod_name_input.is_valid)
     
-    async def generate_mod(self, widget):
+    def __control_button(self, is_valid: bool):
+        self.generate_btn.enabled = is_valid
+
+    
+    async def __generate_mod(self, widget):
         metadata = self.xml_content_builder\
             .add_name(self.metadata_sub_view.mod_name_input.value)\
             .add_version(self.metadata_sub_view.mod_version_input.value)\
@@ -54,6 +59,9 @@ class MainView (IViewComponent):
                 await self.main_window.info_dialog("X4 Tweaker", "Mod created successfully!")
         except ValueError:
             await self.main_window.error_dialog("X4 Tweaker", "Could not select folder. Please try again.")
+    
+    def validation_callback(self, callback):
+        pass
 
     @property
     def component(self):

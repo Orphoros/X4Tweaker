@@ -1,7 +1,6 @@
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
-from toga.validators import MaxLength
 from x4tweaker.lib.class_xml_mod_metadata import XmlMetadataBuilder
 from x4tweaker.lib.constants import Dlc
 from x4tweaker.lib.input_validators import not_empty
@@ -10,6 +9,7 @@ from x4tweaker.lib.interfaces import IViewComponent
 class MetadataSubView (IViewComponent):
     def __init__(self, main_window: toga.MainWindow, xml_content_builder: XmlMetadataBuilder):
         super().__init__(main_window)
+        self.num_invalid_components = 4
         self.xml_content_builder = xml_content_builder
 
         self.metadata_box = toga.Box(style=Pack(direction=COLUMN, padding=5))
@@ -20,7 +20,7 @@ class MetadataSubView (IViewComponent):
             "Mod name: ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_name_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
+        self.mod_name_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty], on_change=self.__control_validation)
         option_container_metadata_name.add(name_label)
         option_container_metadata_name.add(self.mod_name_input)
 
@@ -32,7 +32,7 @@ class MetadataSubView (IViewComponent):
             "Mod version: ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_version_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
+        self.mod_version_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty], on_change=self.__control_validation)
         option_container_metadata_version.add(version_label)
         option_container_metadata_version.add(self.mod_version_input)
 
@@ -56,7 +56,7 @@ class MetadataSubView (IViewComponent):
             "Mod author: ",
             style=Pack(padding=(0, 5), width = 100)
         )
-        self.mod_author_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
+        self.mod_author_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty], on_change=self.__control_validation)
         option_container_metadata_author.add(author_label)
         option_container_metadata_author.add(self.mod_author_input)
 
@@ -68,7 +68,7 @@ class MetadataSubView (IViewComponent):
             "Date: ",
             style=Pack(padding=(0, 5), width = 100)
         )
-        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD", validators=[not_empty])
+        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD", validators=[not_empty], on_change=self.__control_validation)
         option_container_metadata_date.add(date_label)
         option_container_metadata_date.add(self.mod_date_input)
 
@@ -98,6 +98,15 @@ class MetadataSubView (IViewComponent):
     
     def __add_dlc_requirement(self, widget: toga.Switch):
         self.xml_content_builder.add_dlc_requirement(widget.id, widget.value)
+
+    def validation_callback(self, callback):
+        self.validation_callback = callback
+    
+    def __control_validation(self, widget: toga.Widget):
+        self.num_invalid_components += 1 if widget.is_valid else -1
+        self.is_valid = self.num_invalid_components == 0
+        if self.validation_callback is not None:
+            self.validation_callback(self.is_valid)
 
     @property
     def component(self):
