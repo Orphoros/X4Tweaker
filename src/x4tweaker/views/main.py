@@ -30,16 +30,21 @@ class MainView (IViewComponent):
             ],
             style=Pack(height=500)
         )
-
-        self.generate_btn = toga.Button(
-            "Generate",
-            enabled=False,
-            on_press=self.__generate_mod,
-            style=Pack(padding=5)
-        )
     
     def __control_button(self, is_valid: bool):
-        self.generate_btn.enabled = is_valid
+        self.save_command.enabled = is_valid
+    
+    def __define_commands(self):
+        self.save_icon = 'resources/icon_save.png'
+        self.save_command = toga.Command(
+            self.__generate_mod,
+            text='Save',
+            tooltip='Save mod',
+            enabled=False,
+            shortcut=toga.Key.MOD_1 + 's',
+            icon=self.save_icon
+        )
+        self.main_window.toolbar.add(self.save_command)
 
     
     async def __generate_mod(self, widget):
@@ -66,6 +71,7 @@ class MainView (IViewComponent):
     @property
     def component(self):
         self.main_box.add(self.submenus)
-        self.main_box.add(self.generate_btn)
+
+        self.__define_commands()
 
         return self.main_box
