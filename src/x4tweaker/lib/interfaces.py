@@ -58,6 +58,20 @@ class IViewComponent(metaclass=ABCMeta):
         """
         pass
 
+    @abstractmethod
+    def load_data(self, data: dict):
+        """
+        Loads data into the component.
+        """
+        pass
+
+    @abstractmethod
+    def save_data(self) -> dict:
+        """
+        Saves data from the component.
+        """
+        pass
+
     @property
     @abstractmethod
     def component(self) -> toga.Box:

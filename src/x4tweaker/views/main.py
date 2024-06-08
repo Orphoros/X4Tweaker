@@ -1,4 +1,6 @@
+import os
 import toga
+import joblib
 from toga.style import Pack
 from toga.style.pack import COLUMN
 from x4tweaker.lib.bundler import ModBundle
@@ -9,6 +11,7 @@ from x4tweaker.views.submenus import MetadataSubView, WeaponsSubView, TurretsSub
 class MainView (IViewComponent):
     def __init__(self, main_window: toga.MainWindow):
         super().__init__(main_window)
+        self.__define_commands()
         self.xml_content_builder = XmlMetadataBuilder()
         self.main_box = toga.Box(style=Pack(direction=COLUMN, padding=10))
 
@@ -35,17 +38,63 @@ class MainView (IViewComponent):
         self.save_command.enabled = is_valid
     
     def __define_commands(self):
+        self.bundle_icon = 'resources/icon_bundle.png'
+        self.open_icon = 'resources/icon_open.png'
         self.save_icon = 'resources/icon_save.png'
+
         self.save_command = toga.Command(
             self.__generate_mod,
+            text='Generate',
+            tooltip='Generate mod',
+            enabled=True,
+            shortcut=toga.Key.MOD_1 + 'g',
+            icon=self.bundle_icon
+        )
+
+        self.generate_command = toga.Command(
+            self.__save_project,
             text='Save',
-            tooltip='Save mod',
-            enabled=False,
+            tooltip='Save project',
+            enabled=True,
             shortcut=toga.Key.MOD_1 + 's',
             icon=self.save_icon
         )
-        self.main_window.toolbar.add(self.save_command)
 
+        self.open_command = toga.Command(
+            self.__open_project,
+            text='Open',
+            tooltip='Open project',
+            enabled=True,
+            shortcut=toga.Key.MOD_1 + 'o',
+            icon=self.open_icon
+        )
+
+        self.main_window.toolbar.add(self.open_command)
+        self.main_window.toolbar.add(self.generate_command)
+        self.main_window.toolbar.add(self.save_command)
+    
+    async def __open_project(self, widget):
+        try:
+            path_name = await self.main_window.open_file_dialog(file_types=["x4t"], title="Open project")
+            if path_name is not None:
+                data = joblib.load(path_name)
+                self.metadata_sub_view.load_data(data["metadata"])
+                await self.main_window.info_dialog("X4 Tweaker", "Project loaded successfully!")
+        except ValueError:
+            await self.main_window.error_dialog("X4 Tweaker", "Could not select folder. Please try again.")
+    
+    async def __save_project(self, widget):
+        dict = {}
+        dict["metadata"] = self.metadata_sub_view.save_data()
+        
+        try:
+            path_name = await self.main_window.save_file_dialog(file_types=["x4t"], title="Save project", suggested_filename=dict["metadata"]["name"])
+            if path_name is not None:
+                path = os.path.splitext(path_name)[0]
+                joblib.dump(dict, path + ".x4t")
+                await self.main_window.info_dialog("X4 Tweaker", "Project saved successfully!")
+        except ValueError:
+            await self.main_window.error_dialog("X4 Tweaker", "Could not select folder. Please try again.")
     
     async def __generate_mod(self, widget):
         metadata = self.xml_content_builder\
@@ -68,10 +117,15 @@ class MainView (IViewComponent):
     def validation_callback(self, callback):
         pass
 
+    def load_data(self, data: dict):
+        pass
+
+    def save_data(self) -> dict:
+        pass
+
+
     @property
     def component(self):
         self.main_box.add(self.submenus)
-
-        self.__define_commands()
 
         return self.main_box

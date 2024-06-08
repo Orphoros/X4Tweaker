@@ -22,6 +22,7 @@ class XmlMetadata(IXmlMod):
 class XmlMetadataBuilder(IXmlBuilder):
     def __init__(self) -> None:
         self.content = Element('content')
+        self.list_dlc_required = []
 
         for dlc in Dlc:
             id = dlc.value[0]
@@ -64,6 +65,9 @@ class XmlMetadataBuilder(IXmlBuilder):
 
     def add_dlc_requirement(self, dlc: str, required: bool):
         self.content.find(".//dependency[@id='" + dlc + "']").set("optional", "false" if required else "true")
+        # add dlc to list of required dlcs if not already in list
+        if required and dlc not in self.list_dlc_required:
+            self.list_dlc_required.append(dlc)
         return self
 
     def build_xml_mod(self) -> IXmlMod:

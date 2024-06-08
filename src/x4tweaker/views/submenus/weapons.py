@@ -73,3 +73,9 @@ class WeaponsSubView (IViewComponent):
 
     def validation_callback(self, callback):
         pass
+
+    def load_data(self, data: dict):
+        pass
+
+    def save_data(self) -> dict:
+        pass

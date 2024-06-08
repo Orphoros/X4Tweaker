@@ -9,7 +9,6 @@ from x4tweaker.lib.interfaces import IViewComponent
 class MetadataSubView (IViewComponent):
     def __init__(self, main_window: toga.MainWindow, xml_content_builder: XmlMetadataBuilder):
         super().__init__(main_window)
-        self.num_invalid_components = 4
         self.xml_content_builder = xml_content_builder
 
         self.metadata_box = toga.Box(style=Pack(direction=COLUMN, padding=5))
@@ -20,7 +19,7 @@ class MetadataSubView (IViewComponent):
             "Mod name: ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_name_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty], on_change=self.__control_validation)
+        self.mod_name_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
         option_container_metadata_name.add(name_label)
         option_container_metadata_name.add(self.mod_name_input)
 
@@ -32,7 +31,7 @@ class MetadataSubView (IViewComponent):
             "Mod version: ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_version_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty], on_change=self.__control_validation)
+        self.mod_version_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
         option_container_metadata_version.add(version_label)
         option_container_metadata_version.add(self.mod_version_input)
 
@@ -41,7 +40,7 @@ class MetadataSubView (IViewComponent):
     def __define_comp_description(self) -> toga.Box:
         option_container_metadata_description = toga.Box(style=Pack(direction=ROW, padding=5))
         description_label = toga.Label(
-            "Mod description: ",
+            "Description:",
             style=Pack(padding=(0, 5), width=100)
         )
         self.mod_description_input = toga.MultilineTextInput(style=Pack(flex=1))
@@ -56,7 +55,7 @@ class MetadataSubView (IViewComponent):
             "Mod author: ",
             style=Pack(padding=(0, 5), width = 100)
         )
-        self.mod_author_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty], on_change=self.__control_validation)
+        self.mod_author_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
         option_container_metadata_author.add(author_label)
         option_container_metadata_author.add(self.mod_author_input)
 
@@ -68,7 +67,7 @@ class MetadataSubView (IViewComponent):
             "Date: ",
             style=Pack(padding=(0, 5), width = 100)
         )
-        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD", validators=[not_empty], on_change=self.__control_validation)
+        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD", validators=[not_empty])
         option_container_metadata_date.add(date_label)
         option_container_metadata_date.add(self.mod_date_input)
 
@@ -89,10 +88,10 @@ class MetadataSubView (IViewComponent):
     def __define_comp_dlc(self) -> toga.Box:
         option_container_metadata_dlc = toga.Box(style=Pack(direction=COLUMN, padding=5))
         option_container_metadata_dlc.add(toga.Label("Compatible DLCs:", style=Pack(padding=(4, 5))))
-        dlc_options = toga.ScrollContainer(content=toga.Box(children=[
+        self.dlc_options = toga.ScrollContainer(content=toga.Box(children=[
             toga.Switch(id=dlc.value[0], text=dlc.value[1], on_change=self.__add_dlc_requirement) for dlc in Dlc
         ], style=Pack(direction=COLUMN, padding=5)))
-        option_container_metadata_dlc.add(dlc_options)
+        option_container_metadata_dlc.add(self.dlc_options)
 
         return option_container_metadata_dlc
     
@@ -102,11 +101,31 @@ class MetadataSubView (IViewComponent):
     def validation_callback(self, callback):
         self.validation_callback = callback
     
-    def __control_validation(self, widget: toga.Widget):
-        self.num_invalid_components += 1 if widget.is_valid else -1
-        self.is_valid = self.num_invalid_components == 0
-        if self.validation_callback is not None:
-            self.validation_callback(self.is_valid)
+    def load_data(self, data: dict):
+        self.mod_name_input.value = data.get("name")
+        self.mod_description_input.value = data.get("description")
+        self.mod_author_input.value = data.get("author")
+        self.mod_version_input.value = data.get("version")
+        self.mod_date_input.value = data.get("date")
+        self.mod_save_compatible.value = data.get("save_compatible", False)
+        compatible_dlcs = data.get("compatible_dlcs", [])
+        for comp_dlc in self.dlc_options.content.children:
+            if comp_dlc.id in compatible_dlcs:
+                comp_dlc.value = True
+                self.xml_content_builder.add_dlc_requirement(comp_dlc.id, True)
+            else:
+                comp_dlc.value = False
+
+    def save_data(self) -> dict:
+        return {
+            "name": self.mod_name_input.value,
+            "version": self.mod_version_input.value,
+            "description": self.mod_description_input.value,
+            "author": self.mod_author_input.value,
+            "date": self.mod_date_input.value,
+            "save_compatible": self.mod_save_compatible.value,
+            "compatible_dlcs": self.xml_content_builder.list_dlc_required,
+        }
 
     @property
     def component(self):
