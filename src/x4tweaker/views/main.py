@@ -35,6 +35,7 @@ class MainView (IViewComponent):
             on_press=self.generate_mod,
             style=Pack(padding=5)
         )
+        print(self.metadata_sub_view.mod_name_input.is_valid)
     
     async def generate_mod(self, widget):
         metadata = self.xml_content_builder\

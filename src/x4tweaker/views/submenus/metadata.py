@@ -1,8 +1,10 @@
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
+from toga.validators import MaxLength
 from x4tweaker.lib.class_xml_mod_metadata import XmlMetadataBuilder
 from x4tweaker.lib.constants import Dlc
+from x4tweaker.lib.input_validators import not_empty
 from x4tweaker.lib.interfaces import IViewComponent
 
 class MetadataSubView (IViewComponent):
@@ -18,7 +20,7 @@ class MetadataSubView (IViewComponent):
             "Mod name: ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_name_input = toga.TextInput(style=Pack(flex=1))
+        self.mod_name_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
         option_container_metadata_name.add(name_label)
         option_container_metadata_name.add(self.mod_name_input)
 
@@ -30,7 +32,7 @@ class MetadataSubView (IViewComponent):
             "Mod version: ",
             style=Pack(padding=(0, 5), width=100)
         )
-        self.mod_version_input = toga.TextInput(style=Pack(flex=1))
+        self.mod_version_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
         option_container_metadata_version.add(version_label)
         option_container_metadata_version.add(self.mod_version_input)
 
@@ -54,7 +56,7 @@ class MetadataSubView (IViewComponent):
             "Mod author: ",
             style=Pack(padding=(0, 5), width = 100)
         )
-        self.mod_author_input = toga.TextInput(style=Pack(flex=1))
+        self.mod_author_input = toga.TextInput(style=Pack(flex=1), validators=[not_empty])
         option_container_metadata_author.add(author_label)
         option_container_metadata_author.add(self.mod_author_input)
 
@@ -66,7 +68,7 @@ class MetadataSubView (IViewComponent):
             "Date: ",
             style=Pack(padding=(0, 5), width = 100)
         )
-        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD")
+        self.mod_date_input = toga.TextInput(style=Pack(flex=1), placeholder="YYYY-MM-DD", validators=[not_empty])
         option_container_metadata_date.add(date_label)
         option_container_metadata_date.add(self.mod_date_input)
 
