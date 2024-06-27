@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macOS-13, windows-latest]
+        platform: [windows-latest, macOS-13, ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
@@ -58,5 +58,4 @@ jobs:
           files: dist/*
           body: ${{ steps.changelog.outputs.description }}
           draft: true
-          tag_name: ${{ steps.lasttag.outputs.version }}
-          name: "[Alpha] X4 Tweaker ${{ steps.lasttag.outputs.version }}"
+          name: "[Alpha] X4 Tweaker v${{ steps.lasttag.outputs.version }}"
