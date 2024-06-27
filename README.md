@@ -2,7 +2,10 @@
 <p>
     <img width="100" src="./src/x4tweaker/resources/x4tweaker.png" alt="Statusify Logo">
 </p>
+
 <h1>X4 Tweaker</h1>
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Orphoros/X4Tweaker?label=latest%20release)
 
 ![GitHub](https://img.shields.io/github/license/Orphoros/X4Tweaker)
 ![GitHub contributors](https://img.shields.io/github/contributors/Orphoros/X4Tweaker)
@@ -11,6 +14,11 @@
 
 <h4>Cross platform desktop mod template generator for X4: Foundations</h4>
 </div>
+
+<p align="middle">
+    <img src="./img/x4-tweaker-macos-screenshot-v0.0.1.png" width="40%" />
+</p>
+
 
 ## About
 
