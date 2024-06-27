@@ -25,10 +25,10 @@ class MainView (IViewComponent):
         self.submenus = toga.OptionContainer(
             content=[
                 ("Mod Details", self.metadata_sub_view.component),
-                ("Weapons", self.weapons_sub_view.component),
-                ("Turrets", self.turrets_sub_view.component),
-                ("Shields", self.shields_sub_view.component),
-                ("Engines", self.engines_sub_view.component)
+                # ("Weapons", self.weapons_sub_view.component),
+                # ("Turrets", self.turrets_sub_view.component),
+                # ("Shields", self.shields_sub_view.component),
+                # ("Engines", self.engines_sub_view.component)
 
             ],
             style=Pack(height=500)
